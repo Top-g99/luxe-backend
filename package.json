@@ -4,8 +4,8 @@
     "description": "Luxe Staycations API - Luxury Villa Rental Platform",
     "main": "server.js",
     "scripts": {
-        "start": "node server.js",
-        "dev": "nodemon server.js"
+        "start": "node simple-server.js",
+        "dev": "nodemon simple-server.js"
     },
     "keywords": [
         "luxury",
