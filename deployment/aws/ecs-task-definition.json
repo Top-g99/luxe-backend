@@ -1,0 +1,92 @@
+{
+    "family": "luxe-api",
+    "networkMode": "awsvpc",
+    "requiresCompatibilities": ["FARGATE"],
+    "cpu": "512",
+    "memory": "1024",
+    "executionRoleArn": "arn:aws:iam::YOUR_ACCOUNT_ID:role/ecsTaskExecutionRole",
+    "taskRoleArn": "arn:aws:iam::YOUR_ACCOUNT_ID:role/ecsTaskRole",
+    "containerDefinitions": [{
+        "name": "luxe-api",
+        "image": "YOUR_ACCOUNT_ID.dkr.ecr.YOUR_REGION.amazonaws.com/luxe-api:latest",
+        "essential": true,
+        "portMappings": [{
+            "containerPort": 3001,
+            "protocol": "tcp"
+        }],
+        "environment": [{
+                "name": "NODE_ENV",
+                "value": "production"
+            },
+            {
+                "name": "PORT",
+                "value": "3001"
+            },
+            {
+                "name": "FRONTEND_URL",
+                "value": "https://luxestaycations.com"
+            },
+            {
+                "name": "REDIS_URL",
+                "value": "redis://YOUR_REDIS_ENDPOINT:6379"
+            }
+        ],
+        "secrets": [{
+                "name": "SUPABASE_URL",
+                "valueFrom": "arn:aws:secretsmanager:YOUR_REGION:YOUR_ACCOUNT_ID:secret:luxe/supabase-url"
+            },
+            {
+                "name": "SUPABASE_SERVICE_ROLE_KEY",
+                "valueFrom": "arn:aws:secretsmanager:YOUR_REGION:YOUR_ACCOUNT_ID:secret:luxe/supabase-service-key"
+            },
+            {
+                "name": "STRIPE_SECRET_KEY",
+                "valueFrom": "arn:aws:secretsmanager:YOUR_REGION:YOUR_ACCOUNT_ID:secret:luxe/stripe-secret-key"
+            },
+            {
+                "name": "STRIPE_WEBHOOK_SECRET",
+                "valueFrom": "arn:aws:secretsmanager:YOUR_REGION:YOUR_ACCOUNT_ID:secret:luxe/stripe-webhook-secret"
+            },
+            {
+                "name": "JWT_SECRET",
+                "valueFrom": "arn:aws:secretsmanager:YOUR_REGION:YOUR_ACCOUNT_ID:secret:luxe/jwt-secret"
+            }
+        ],
+        "logConfiguration": {
+            "logDriver": "awslogs",
+            "options": {
+                "awslogs-group": "/ecs/luxe-api",
+                "awslogs-region": "YOUR_REGION",
+                "awslogs-stream-prefix": "ecs"
+            }
+        },
+        "healthCheck": {
+            "command": [
+                "CMD-SHELL",
+                "curl -f http://localhost:3001/health || exit 1"
+            ],
+            "interval": 30,
+            "timeout": 5,
+            "retries": 3,
+            "startPeriod": 60
+        },
+        "ulimits": [{
+            "name": "nofile",
+            "softLimit": 65536,
+            "hardLimit": 65536
+        }]
+    }],
+    "tags": [{
+            "key": "Environment",
+            "value": "production"
+        },
+        {
+            "key": "Project",
+            "value": "luxe-staycations"
+        },
+        {
+            "key": "Service",
+            "value": "api"
+        }
+    ]
+}
