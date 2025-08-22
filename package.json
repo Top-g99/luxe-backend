@@ -1,14 +1,14 @@
 {
-  "name": "luxe-api",
-  "version": "1.0.0",
-  "main": "simple-server.js",
-  "scripts": {
-    "start": "node simple-server.js"
-  },
-  "dependencies": {
-    "express": "^4.18.2"
-  },
-  "engines": {
-    "node": "18.x"
-  }
+    "name": "luxe-api",
+    "version": "1.0.0",
+    "main": "simple-server.js",
+    "scripts": {
+        "start": "node simple-server.js"
+    },
+    "dependencies": {
+        "express": "^4.18.2"
+    },
+    "engines": {
+        "node": "18.x"
+    }
 }
